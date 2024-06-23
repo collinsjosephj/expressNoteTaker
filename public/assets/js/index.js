@@ -1,9 +1,9 @@
-// STARTER CODE // 
 let noteForm;
 let noteTitle;
 let noteText;
 let saveNoteBtn;
 let newNoteBtn;
+let clearBtn;
 let noteList;
 
 if (window.location.pathname === '/notes') {
@@ -46,22 +46,38 @@ const saveNote = (note) =>
     body: JSON.stringify(note)
   });
 
-const deleteNote = (id) =>
-  fetch(`/api/notes/${id}`, {
+const deleteNote = (title) =>
+  fetch(`/api/notes/${title}`, {
     method: 'DELETE',
     headers: {
       'Content-Type': 'application/json'
     }
   });
 
+async function updateNote(note) {
+  const response = await fetch(`/api/notes/${note.title}`, {
+    method: 'PUT',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify(note),
+  });
+
+  if (!response.ok) {
+    throw new Error('Failed to update note');
+  }
+
+  return await response.json();
+}
+
 const renderActiveNote = () => {
   hide(saveNoteBtn);
   hide(clearBtn);
 
-  if (activeNote.id) {
+  if (activeNote.title) {
     show(newNoteBtn);
-    noteTitle.setAttribute('readonly', true);
-    noteText.setAttribute('readonly', true);
+    //noteTitle.setAttribute('readonly', true);
+    //noteText.setAttribute('readonly', true);
     noteTitle.value = activeNote.title;
     noteText.value = activeNote.text;
   } else {
@@ -86,17 +102,16 @@ const handleNoteSave = () => {
 
 // Delete the clicked note
 const handleNoteDelete = (e) => {
-  // Prevents the click listener for the list from being called when the button inside of it is clicked
   e.stopPropagation();
 
   const note = e.target;
-  const noteId = JSON.parse(note.parentElement.getAttribute('data-note')).id;
+  const noteTitle = JSON.parse(note.parentElement.getAttribute('data-note')).title;
 
-  if (activeNote.id === noteId) {
+  if (activeNote.title === noteTitle) {
     activeNote = {};
   }
 
-  deleteNote(noteId).then(() => {
+  deleteNote(noteTitle).then(() => {
     getAndRenderNotes();
     renderActiveNote();
   });
@@ -109,7 +124,7 @@ const handleNoteView = (e) => {
   renderActiveNote();
 };
 
-// Sets the activeNote to and empty object and allows the user to enter a new note
+// Sets the activeNote to an empty object and allows the user to enter a new note
 const handleNewNoteView = (e) => {
   activeNote = {};
   show(clearBtn);

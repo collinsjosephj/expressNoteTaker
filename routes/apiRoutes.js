@@ -1,11 +1,11 @@
 const path = require('path');
 const express = require('express');
-const router = express.Router();
+const router = require('express').Router();
 const fs = require('fs');
-const notesToFilePath = path.join(__dirname, 'db', 'db.json');
+const notesFilePath = path.join(__dirname, '..', 'db', 'db.json');
 
 // API route to get all notes
-router.get('/api/notes', (req, res) => {
+router.get('/notes', (req, res) => {
     fs.readFile(notesFilePath, 'utf8', (err, data) => {
         if (err) {
             console.error('Error reading notes file:', err);
@@ -22,7 +22,7 @@ router.get('/api/notes', (req, res) => {
 });
 
 // API route to save a new note
-router.post('/api/notes', (req, res) => {
+router.post('/notes', (req, res) => {
     const newNote = req.body;
     if (!newNote.title || !newNote.text) {
         return res.status(400).send('Note must have a title and text');
@@ -50,8 +50,34 @@ router.post('/api/notes', (req, res) => {
     });
 });
 
+// API route to delete a note
+router.delete('/notes/:title', (req, res) => {
+    const noteTitle = req.params.title;
+    fs.readFile(notesFilePath, 'utf8', (err, data) => {
+        if (err) {
+            console.error('Error reading notes file:', err);
+            return res.status(500).send('Error reading notes file');
+        }
+        let notes;
+        try {
+            notes = JSON.parse(data);
+        } catch (parseErr) {
+            console.error('Error parsing notes file:', parseErr);
+            return res.status(500).send('Error parsing notes file');
+        }
+        const updatedNotes = notes.filter(note => note.title !== noteTitle);
+        fs.writeFile(notesFilePath, JSON.stringify(updatedNotes, null, 2), (err) => {
+            if (err) {
+                console.error('Error deleting note:', err);
+                return res.status(500).send('Error deleting note');
+            }
+            res.json({ title: noteTitle });
+        });
+    });
+});
+
 // API route to update an existing note
-router.put('/api/notes/:title', (req, res) => {
+router.put('/notes/:title', (req, res) => {
     const noteTitle = req.params.title;
     const updatedNote = req.body;
 
@@ -90,28 +116,4 @@ router.put('/api/notes/:title', (req, res) => {
     });
 });
 
-// API route to delete a note
-router.delete('/api/notes/:title', (req, res) => {
-    const noteTitle = req.params.title;
-    fs.readFile(notesFilePath, 'utf8', (err, data) => {
-        if (err) {
-            console.error('Error reading notes file:', err);
-            return res.status(500).send('Error reading notes file');
-        }
-        let notes;
-        try {
-            notes = JSON.parse(data);
-        } catch (parseErr) {
-            console.error('Error parsing notes file:', parseErr);
-            return res.status(500).send('Error parsing notes file');
-        }
-        const updatedNotes = notes.filter(note => note.title !== noteTitle);
-        fs.writeFile(notesFilePath, JSON.stringify(updatedNotes, null, 2), (err) => {
-            if (err) {
-                console.error('Error deleting note:', err);
-                return res.status(500).send('Error deleting note');
-            }
-            res.json({ title: noteTitle });
-        });
-    });
-});
+module.exports = router;
