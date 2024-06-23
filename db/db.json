@@ -1,6 +1,22 @@
 [
     {
-        "title":"Test Title",
+        "title":"Go to meeting for 4th of July Parade",
+        "text":"Test text"
+    },
+    {
+        "title":"Get Dog Food for Statia",
+        "text":"Test text"
+    },
+    {
+        "title":"Schedule Haircut",
+        "text":"Test text"
+    },
+    {
+        "title":"Catch up on all your missing bootcamp assignments!",
+        "text":"Test text"
+    },
+    {
+        "title":"Call dad everyday <3 just to chat :)",
         "text":"Test text"
     }
 ]
