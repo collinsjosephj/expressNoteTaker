@@ -1,3 +1,4 @@
+// STARTER CODE // 
 let noteForm;
 let noteTitle;
 let noteText;
