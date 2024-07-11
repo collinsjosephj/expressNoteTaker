@@ -45,6 +45,6 @@ npm start or node server.js
 
 Once you have successfully started the application, kindly follow these steps:
 
-- **Open the application:** open your browser and navigate to `http://localhost:3002`.
+1. **Open the application:** open your browser and navigate to `http://localhost:3002`.
 - You will be presented with a landing page that includes a link to the notes page.
 - 
