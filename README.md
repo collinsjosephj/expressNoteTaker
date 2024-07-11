@@ -6,6 +6,10 @@
 
 The expressNoteTaker application is a simple and efficient tool designed for small business owners, or anyone looking to stay more organized, to write, save, delete, and manage notes. This application uses an Express.js back end and stores note data in a JSON file, ensuring a seamless and lightweight experience. With this application, users can organize their thoughts and keep track of tasks they need to complete, and mark off tasks that have been completed. 
 
+## Sources
+
+I utilized the cloud recordings of class, W3, and YouTube to help me build this application in its entirety. 
+
 ## Table of Contents
 
 - [Description](#description)
